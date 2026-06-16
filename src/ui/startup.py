@@ -10,7 +10,7 @@ from PyQt6.QtCore import Qt, QThread, pyqtSignal
 from PyQt6.QtGui import QFont
 
 
-VERSION = "2.0.0"
+VERSION = "2.0.1"
 VERSION_INFO_URL = "https://raw.githubusercontent.com/RedSlimeC/Phoenix-V2/main/version_info.json"
 
 
