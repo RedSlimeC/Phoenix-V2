@@ -1,5 +1,5 @@
 {
-  "version": "2.0.0",
+  "version": "2.0.1",
   "download_url": "https://github.com/RedSlimeC/Phoenix-V2/releases/download/pheonix/phoenix_app.exe",
   "patchlog": [
     {
@@ -9,6 +9,13 @@
         "Added version check and update system",
         "Added startup window with patchlog",
         "Improved overall app stability"
+      ]
+    },
+    {
+      "version": "2.0.0",
+      "date": "2026-06-16",
+      "changes": [
+        "Initial version with update system"
       ]
     },
     {
