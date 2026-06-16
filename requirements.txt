@@ -1,0 +1,10 @@
+PyQt6
+pymongo
+bcrypt
+pynput
+ntplib
+mss
+pillow
+pytesseract
+pywebview
+requests

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Phoenix Sequencer</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="cyber-gothic" data-view="sequencer">
+  <div class="window-drag-handle" id="window-drag-handle">
+    <div class="drag-handle-content">
+      <span class="drag-title">Phoenix Sequencer</span>
+    </div>
+    <div class="window-controls">
+      <button type="button" id="btn-win-close" class="win-control-btn close" title="Close">×</button>
+    </div>
+  </div>
+
+  <header class="profile-bar" style="display:none">
+    <label class="profile-label">Profile
+      <select id="profile-select"></select>
+    </label>
+    <button type="button" id="btn-profile-save" class="btn">Save</button>
+    <span class="profile-bar-spacer"></span>
+    <button type="button" class="top-nav-btn" data-nav="settings">Settings</button>
+  </header>
+
+  <main class="app-main sequencer-only">
+    <section class="sequencer-panel">
+      <div class="seq-panel-header">
+        <span class="seq-title">Sequencer</span>
+        <div class="seq-header-center">
+          <div class="transport">
+            <button type="button" id="btn-stop" class="transport-btn" title="Stop">■</button>
+            <button type="button" id="btn-play" class="transport-btn play" title="Play">▶</button>
+          </div>
+        </div>
+        <div class="seq-header-actions">
+          <button type="button" id="btn-add-track" class="btn">+ Track</button>
+          <button type="button" id="btn-add-block" class="btn btn-accent">+ Block</button>
+        </div>
+      </div>
+
+      <div class="seq-tabs-bar">
+        <div class="seq-tabs" id="seq-tabs"></div>
+      </div>
+
+      <div class="play-panel">
+        <div class="play-panel-section hidden">
+          <span class="play-panel-label">Start Sequence</span>
+          <label class="play-scope-label">
+            <select id="pb-scope">
+              <option value="current">Current Sequence</option>
+              <option value="selected">Selected Sequences</option>
+              <option value="all">All Sequences</option>
+            </select>
+          </label>
+        </div>
+        <div class="play-checks" id="play-checks"></div>
+        <div class="playback-settings" id="playback-settings">
+          <span class="play-panel-label">Mode</span>
+          <label class="play-scope-label">
+            <select id="pb-mode">
+              <option value="loop">Loop</option>
+              <option value="count">Count</option>
+              <option value="minutes">Minutes</option>
+            </select>
+          </label>
+          <div id="pb-stop-condition-wrap" class="play-field-row pb-extra hidden">
+            <span class="play-panel-label">Stop Condition</span>
+            <label class="play-scope-label">
+              <select id="pb-stop-condition">
+                <option value="none">None</option>
+                <option value="untilDeath">Character dies</option>
+                <option value="hpStonesEmpty">HP stones empty</option>
+                <option value="mpStonesEmpty">MP stones empty</option>
+              </select>
+            </label>
+          </div>
+          <div id="pb-teleport-wrap" class="play-field-row pb-extra hidden">
+            <span class="play-panel-label">Teleport Key</span>
+            <label class="play-scope-label play-field-inline">
+              <input type="text" id="pb-teleport-key" class="ocr-field-input ocr-key-input" maxlength="20" placeholder="Optional" style="text-transform: uppercase; width: 80px;" />
+            </label>
+          </div>
+          <div id="pb-count-wrap" class="play-field-row pb-extra hidden">
+            <span class="play-panel-label">Count</span>
+            <label class="play-scope-label play-field-inline">
+              <span class="play-field-prefix">×</span>
+              <input type="number" id="pb-count" min="1" max="9999" value="3" />
+            </label>
+          </div>
+          <div id="pb-minutes-wrap" class="play-field-row pb-extra hidden">
+            <span class="play-panel-label">Minutes</span>
+            <label class="play-scope-label play-field-inline">
+              <input type="number" id="pb-minutes" min="0.5" max="1440" step="0.5" value="5" />
+            </label>
+          </div>
+        </div>
+        <div class="seq-trigger-settings" id="seq-trigger-settings">
+          <span class="play-panel-label">Trigger</span>
+          <label class="play-scope-label">
+            <select id="seq-trigger-mode">
+              <option value="auto">Automatic</option>
+              <option value="keyPress">Key Press</option>
+            </select>
+          </label>
+          <div id="seq-key-wrap" class="seq-key-fields hidden">
+            <span class="play-panel-label">Key</span>
+            <input type="text" id="seq-trigger-key" class="seq-trigger-key-input" placeholder="Click to record" maxlength="40" autocomplete="off" spellcheck="false" readonly />
+          </div>
+        </div>
+      </div>
+
+      <div class="editor-scroll" id="editor-scroll">
+        <div class="playhead-line" id="playhead-line"></div>
+        <div class="ruler-wrap">
+          <div class="track-labels-spacer"></div>
+          <div class="ruler" id="ruler">
+            <div class="ruler-playhead" id="ruler-playhead" title="Drag playhead"></div>
+          </div>
+        </div>
+        <div class="tracks-area" id="tracks-area">
+          <div class="marquee" id="marquee" hidden></div>
+          <div class="tracks" id="tracks"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="context-menu" class="context-menu hidden">
+    <button type="button" data-action="edit">Edit</button>
+    <button type="button" data-action="duplicate">Duplicate</button>
+    <button type="button" data-action="delete">Delete</button>
+  </div>
+
+  <div id="lane-menu" class="context-menu hidden">
+    <button type="button" data-action="new-block">New Block</button>
+  </div>
+
+  <div id="drag-tooltip" class="drag-tooltip hidden"></div>
+
+  <div id="modal" class="modal hidden">
+    <div class="modal-box modal-block-edit">
+      <h3 id="modal-title" class="modal-block-title">Edit Block</h3>
+      <label class="modal-field">
+        <span class="modal-field-label">Type</span>
+        <select id="modal-type" class="modal-select">
+          <option value="keyboard">Keyboard</option>
+          <option value="mouse">Mouse Click</option>
+        </select>
+      </label>
+      <div id="modal-keyboard-fields" class="modal-type-pane">
+        <label class="modal-field">
+          <span class="modal-field-label">Key(s)</span>
+          <input type="text" id="modal-key" class="modal-input" placeholder="Click to record" maxlength="40" autocomplete="off" spellcheck="false" readonly />
+        </label>
+        <p class="modal-hint">Click field, hold keys and release – combination will be saved.</p>
+      </div>
+      <div id="modal-mouse-fields" class="modal-type-pane hidden">
+        <label class="modal-field">
+          <span class="modal-field-label">Mouse Button</span>
+          <select id="modal-mouse-btn" class="modal-select">
+            <option value="left">Left</option>
+            <option value="right">Right</option>
+          </select>
+        </label>
+        <label class="modal-check"><input type="checkbox" id="modal-double" /> Double Click</label>
+        <div class="modal-mouse-row">
+          <button type="button" id="btn-pick-click" class="btn btn-modal-pick">Click Position</button>
+          <span id="modal-click-pos" class="modal-pos-label">—</span>
+        </div>
+      </div>
+      <div id="modal-timing-fields" class="modal-timing-grid">
+        <label class="modal-field">
+          <span class="modal-field-label">Duration (ms)</span>
+          <input type="number" id="modal-duration" class="modal-input" min="50" max="60000" step="50" value="500" />
+        </label>
+        <label class="modal-field">
+          <span class="modal-field-label">Start (ms)</span>
+          <input type="number" id="modal-start" class="modal-input" min="0" step="50" value="0" />
+        </label>
+        <label class="modal-field">
+          <span class="modal-field-label">Track</span>
+          <input type="number" id="modal-track" class="modal-input" min="0" value="0" />
+        </label>
+      </div>
+      <div class="modal-actions modal-actions-block">
+        <button type="button" id="modal-delete" class="btn danger">Delete</button>
+        <button type="button" id="modal-cancel" class="btn">Cancel</button>
+        <button type="button" id="modal-save" class="btn btn-accent">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="nav-modal" class="modal hidden">
+    <div class="modal-box">
+      <h3 id="nav-modal-title">Info</h3>
+      <div id="nav-modal-body" class="nav-modal-body"></div>
+      <div class="modal-actions">
+        <button type="button" id="nav-modal-close" class="btn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
+  <script>
+    window.pywebview = { api: null };
+    new QWebChannel(qt.webChannelTransport, function(channel) {
+      window.pywebview.api = channel.objects['pywebview.api'];
+      // Wrap API methods to parse JSON responses
+      for (const key in window.pywebview.api) {
+        if (typeof window.pywebview.api[key] === 'function') {
+          const original = window.pywebview.api[key];
+          window.pywebview.api[key] = async function(...args) {
+            const result = await original.apply(null, args);
+            try {
+              return JSON.parse(result);
+            } catch {
+              return result;
+            }
+          };
+        }
+      }
+    });
+  </script>
+  <script src="app.js"></script>
+</body>
+</html>

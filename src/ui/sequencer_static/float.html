@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      width: 64px;
+      height: 64px;
+      overflow: hidden;
+      background: transparent;
+      user-select: none;
+      pointer-events: all;
+    }
+    .slime-hit {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 64px;
+      height: 64px;
+      padding: 0;
+      border: none;
+      outline: none; /* Entfernt den Fokus-Rahmen */
+      border-radius: 0;
+      background: rgba(0, 0, 0, 0.01); /* Hit-testable but invisible */
+      cursor: grab;
+      line-height: 0;
+      touch-action: none;
+      pointer-events: all;
+    }
+    .slime-hit.dragging {
+      cursor: grabbing;
+    }
+    .slime-hit img {
+      display: block;
+      width: 56px;
+      height: 56px;
+      object-fit: contain;
+      pointer-events: none;
+      -webkit-user-drag: none;
+      user-drag: none;
+      transition: filter 0.15s ease, transform 0.12s ease;
+    }
+    .slime-hit:hover:not(.dragging) img {
+      filter: brightness(1.12);
+    }
+    .slime-hit:active:not(.dragging) img {
+      transform: scale(0.94);
+    }
+    .slime-hit.dragging img {
+      transition: none;
+      filter: none;
+      transform: none;
+    }
+  </style>
+</head>
+<body>
+  <button type="button" class="slime-hit">
+    <img src="images/slimec.png" alt="" width="56" height="56" />
+  </button>
+  <script>
+    (function () {
+      const hit = document.querySelector(".slime-hit");
+      const DRAG_PX = 6;
+      let down = null;
+      let dragging = false;
+      let winStart = null;
+      let pendingPos = null;
+      let moveRaf = 0;
+      let lastScreen = null;
+
+      function api() {
+        return window.pywebview && window.pywebview.api;
+      }
+
+      function flushMove() {
+        moveRaf = 0;
+        if (!pendingPos || !dragging) return;
+        const a = api();
+        if (a?.float_set_position) {
+          a.float_set_position(pendingPos.x, pendingPos.y);
+        }
+        pendingPos = null;
+      }
+
+      function queueMove(x, y) {
+        pendingPos = { x, y };
+        if (!moveRaf) {
+          moveRaf = requestAnimationFrame(flushMove);
+        }
+      }
+
+      hit.addEventListener("pointerdown", (e) => {
+        if (e.button !== 0) return;
+        down = { x: e.screenX, y: e.screenY };
+        lastScreen = { x: e.screenX, y: e.screenY };
+        dragging = false;
+        winStart = null;
+        pendingPos = null;
+        hit.classList.add("dragging");
+        hit.setPointerCapture(e.pointerId);
+
+        const a = api();
+        if (a?.float_get_position) {
+          a.float_get_position().then((pos) => {
+            if (pos?.ok && down) {
+              winStart = { x: pos.x, y: pos.y };
+            }
+          });
+        }
+      });
+
+      hit.addEventListener("pointermove", (e) => {
+        if (!down) return;
+        const total = Math.hypot(e.screenX - down.x, e.screenY - down.y);
+        if (total >= DRAG_PX) dragging = true;
+        if (!dragging) return;
+
+        if (winStart) {
+          queueMove(
+            Math.round(winStart.x + (e.screenX - down.x)),
+            Math.round(winStart.y + (e.screenY - down.y))
+          );
+          return;
+        }
+
+        const dx = e.screenX - lastScreen.x;
+        const dy = e.screenY - lastScreen.y;
+        lastScreen = { x: e.screenX, y: e.screenY };
+        if (!dx && !dy) return;
+        const a = api();
+        if (a?.float_move_by) a.float_move_by(dx, dy);
+      });
+
+      hit.addEventListener("pointerup", (e) => {
+        if (!down || e.button !== 0) return;
+        const wasDrag = dragging;
+        const finalPos = pendingPos;
+        hit.classList.remove("dragging");
+        down = null;
+        dragging = false;
+        winStart = null;
+        lastScreen = null;
+        pendingPos = null;
+        if (moveRaf) {
+          cancelAnimationFrame(moveRaf);
+          moveRaf = 0;
+        }
+        try {
+          hit.releasePointerCapture(e.pointerId);
+        } catch (_) {}
+
+        if (wasDrag) {
+          if (finalPos) {
+            const a = api();
+            if (a?.float_set_position) a.float_set_position(finalPos.x, finalPos.y);
+          }
+          const a = api();
+          if (a?.float_save_position) a.float_save_position();
+          return;
+        }
+
+        const a = api();
+        if (a?.open_main) a.open_main();
+      });
+
+      hit.addEventListener("pointercancel", () => {
+        down = null;
+        dragging = false;
+        winStart = null;
+        lastScreen = null;
+        pendingPos = null;
+        if (moveRaf) {
+          cancelAnimationFrame(moveRaf);
+          moveRaf = 0;
+        }
+        hit.classList.remove("dragging");
+      });
+    })();
+  </script>
+</body>
+</html>

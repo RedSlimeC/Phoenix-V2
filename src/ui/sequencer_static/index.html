@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Slimec</title>
+  <link rel="icon" href="images/slimec.png" type="image/png" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="cyber-gothic compact-shell" data-view="main">
+  <div id="auth-overlay" class="auth-overlay">
+    <div class="auth-card">
+      <div class="auth-header">
+        <img src="slimec.png" class="auth-logo" alt="Slimec">
+        <h2 id="auth-title">Login</h2>
+      </div>
+      <div id="login-form" class="auth-form">
+        <div class="auth-field">
+          <label>Accountname / Email</label>
+          <input type="text" id="login-user" placeholder="Name oder Email">
+        </div>
+        <div class="auth-field">
+          <label>Passwort</label>
+          <input type="password" id="login-pass" placeholder="••••••••">
+        </div>
+        <button id="btn-do-login" class="btn-auth-primary">EINLOGGEN</button>
+        <p class="auth-switch-text">Noch kein Account? <a href="#" id="link-to-register">Registrieren</a></p>
+      </div>
+      <div id="register-form" class="auth-form hidden">
+        <div class="auth-field">
+          <label>Accountname</label>
+          <input type="text" id="reg-user" placeholder="Wähle einen Namen">
+        </div>
+        <div class="auth-field">
+          <label>Email</label>
+          <input type="email" id="reg-email" placeholder="beispiel@mail.de">
+        </div>
+        <div class="auth-field">
+          <label>Passwort</label>
+          <input type="password" id="reg-pass" placeholder="••••••••">
+        </div>
+        <button id="btn-do-register" class="btn-auth-primary">ACCOUNT ERSTELLEN</button>
+        <p class="auth-switch-text">Bereits Mitglied? <a href="#" id="link-to-login">Zum Login</a></p>
+      </div>
+      <div id="auth-error" class="auth-error-msg hidden"></div>
+    </div>
+  </div>
+
+  <div class="compact-app">
+    <header class="compact-pager">
+      <button type="button" id="btn-instance-prev" class="pager-arrow" title="Vorheriger Charakter" disabled>‹</button>
+      <span id="instance-indicator" class="pager-label">1 / 1</span>
+      <button type="button" id="btn-instance-next" class="pager-arrow" title="Nächster Charakter" disabled>›</button>
+    </header>
+
+    <div id="page-1" class="compact-page">
+      <section class="compact-status">
+        <div id="discovery-status-container" class="discovery-status-compact hidden">
+          <div class="discovery-spinner"></div>
+          <span id="discovery-status-text">Suche nach Fiesta.exe...</span>
+        </div>
+        <div id="compact-status-panel" class="compact-status-panel">
+          <div class="compact-char-name" id="compact-char-name">—</div>
+          <div class="stat-bar-compact hp">
+            <div class="stat-bar-fill-compact hp" id="compact-hp-fill" style="width: 0%"></div>
+            <div class="stat-bar-text" id="compact-hp-text">0 / 0 (0%)</div>
+          </div>
+          <div class="stat-bar-compact mp">
+            <div class="stat-bar-fill-compact mp" id="compact-mp-fill" style="width: 0%"></div>
+            <div class="stat-bar-text" id="compact-mp-text">0 / 0 (0%)</div>
+          </div>
+          <div class="stat-row-stones">
+            <span>HP STONES: <b class="stat-stone-val" id="compact-hp-stones">0</b></span>
+            <span>MP STONES: <b class="stat-stone-val" id="compact-mp-stones">0</b></span>
+          </div>
+        </div>
+      </section>
+
+      <section class="feature-panel">
+        <div class="feature-row" data-feature="heal">
+          <span class="feature-label">Auto Heal</span>
+          <label class="toggle-switch feature-toggle">
+            <input type="checkbox" id="feat-auto-heal" />
+            <span class="toggle-slider"><span class="on-text">ON</span><span class="off-text">OFF</span></span>
+          </label>
+          <button type="button" class="feature-gear" data-gear="heal" title="Einstellungen">⚙</button>
+        </div>
+        <div class="feature-row" data-feature="zoom">
+          <span class="feature-label">Ultra Zoom</span>
+          <label class="toggle-switch feature-toggle">
+            <input type="checkbox" id="feat-ultra-zoom" />
+            <span class="toggle-slider"><span class="on-text">ON</span><span class="off-text">OFF</span></span>
+          </label>
+          <button type="button" class="feature-gear" data-gear="zoom" title="Einstellungen">⚙</button>
+        </div>
+        <div class="feature-row" data-feature="mining" data-premium="true">
+          <span class="feature-label">Fast Mining</span>
+          <label class="toggle-switch feature-toggle">
+            <input type="checkbox" id="feat-fast-mining" />
+            <span class="toggle-slider"><span class="on-text">ON</span><span class="off-text">OFF</span></span>
+          </label>
+          <button type="button" class="feature-gear" data-gear="mining" title="Einstellungen">⚙</button>
+        </div>
+        <div class="feature-row" data-feature="quest" data-premium="true">
+          <span class="feature-label">Auto Quest</span>
+          <label class="toggle-switch feature-toggle">
+            <input type="checkbox" id="feat-auto-quest" />
+            <span class="toggle-slider"><span class="on-text">ON</span><span class="off-text">OFF</span></span>
+          </label>
+          <button type="button" class="feature-gear" data-gear="quest" title="Einstellungen">⚙</button>
+        </div>
+        <div class="feature-row" data-feature="sequencer" data-premium="true">
+          <span class="feature-label">Sequencer</span>
+          <label class="toggle-switch feature-toggle">
+            <input type="checkbox" id="feat-sequencer" />
+            <span class="toggle-slider"><span class="on-text">ON</span><span class="off-text">OFF</span></span>
+          </label>
+          <button type="button" class="feature-gear" data-gear="sequencer" title="Sequencer öffnen">⚙</button>
+        </div>
+      </section>
+    </div>
+
+    <div id="page-2" class="compact-page hidden">
+      <section class="compact-settings-page">
+        <label class="compact-field">
+          <span>Profil</span>
+          <select id="profile-select"></select>
+        </label>
+        <div class="compact-btn-row">
+          <button type="button" id="btn-profile-new" class="btn btn-sm">+ Profil</button>
+          <button type="button" id="btn-profile-save" class="btn btn-sm">Speichern</button>
+          <button type="button" id="btn-profile-delete" class="btn btn-sm danger-outline">Löschen</button>
+        </div>
+        <time id="atomic-clock" class="atomic-clock compact-clock clock-loading" datetime="">--:--:--</time>
+        <p id="user-rank-label" class="compact-rank-label hidden"></p>
+        <div class="compact-settings-links">
+          <button type="button" class="compact-link-btn" data-nav="account">Account</button>
+          <button type="button" class="compact-link-btn" data-nav="settings">Einstellungen</button>
+        </div>
+      </section>
+    </div>
+
+    <footer class="compact-footer">
+      <button type="button" id="btn-exit" class="footer-btn footer-exit" title="Beenden">⎋</button>
+      <div class="footer-right">
+        <button type="button" id="btn-footer-chat" class="footer-btn footer-chat" title="Account">💬</button>
+        <button type="button" id="btn-footer-help" class="footer-btn footer-help" title="Hilfe">?</button>
+      </div>
+    </footer>
+  </div>
+
+  <div id="stat-cards-container" class="hidden" aria-hidden="true"></div>
+
+  <div id="ocr-settings-modal" class="modal hidden">
+    <div class="ocr-settings-panel">
+      <h3 id="ocr-settings-title" class="ocr-settings-title">Auto Heal Settings</h3>
+      <div id="ocr-tab-heal" class="ocr-tab-pane">
+        <div class="ocr-toggle-container">
+          <span class="ocr-toggle-label">Auto Heal</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="ocr-enabled" />
+            <span class="toggle-slider"><span class="on-text">ON</span><span class="off-text">OFF</span></span>
+          </label>
+        </div>
+        <label class="ocr-field-label">Prüf-Intervall (ms)
+          <input type="number" id="ocr-interval" class="ocr-field-input" min="100" max="10000" step="50" value="500" />
+        </label>
+        <div class="ocr-conditions-head">
+          <span class="ocr-field-label">Bedingungen</span>
+          <button type="button" id="btn-ocr-add-cond" class="btn-ocr-link">+ Bedingung</button>
+        </div>
+        <div id="ocr-conditions-box" class="ocr-conditions-box"></div>
+      </div>
+      <div id="ocr-tab-zoom" class="ocr-tab-pane hidden">
+        <div class="ocr-toggle-container">
+          <span class="ocr-toggle-label">Ultra Zoom</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="char-zoom-enabled" />
+            <span class="toggle-slider"><span class="on-text">ON</span><span class="off-text">OFF</span></span>
+          </label>
+        </div>
+        <label class="ocr-field-label">Zoom Distanz
+          <input type="number" id="char-zoom-value" class="ocr-field-input" min="1" max="99999" step="1" value="720" />
+        </label>
+      </div>
+      <div id="ocr-tab-mining" class="ocr-tab-pane hidden">
+        <div class="ocr-toggle-container">
+          <span class="ocr-toggle-label">Fast Mining</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="mining-enabled" />
+            <span class="toggle-slider"><span class="on-text">ON</span><span class="off-text">OFF</span></span>
+          </label>
+        </div>
+        <div class="ocr-action-row">
+          <button type="button" id="btn-mining-region" class="btn-ocr-action">Bereich wählen</button>
+          <span class="btn-help-icon" data-help="help_area_04.png">?</span>
+        </div>
+        <p id="mining-region-info" class="ocr-pos-info">Kein Bereich</p>
+        <p class="ocr-subsection-hint">Der Bot klickt automatisch, wenn der grüne Balken den gelben Bereich erreicht.</p>
+      </div>
+      <div id="ocr-tab-quest" class="ocr-tab-pane hidden">
+        <div class="ocr-toggle-container">
+          <span class="ocr-toggle-label">Auto Quest</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="quest-enabled" />
+            <span class="toggle-slider"><span class="on-text">ON</span><span class="off-text">OFF</span></span>
+          </label>
+        </div>
+        <div class="ocr-action-row">
+          <button type="button" id="btn-quest-region" class="btn-ocr-action">Bereich wählen</button>
+          <span class="btn-help-icon" data-help="help_area_01.png">?</span>
+        </div>
+        <p id="quest-region-info" class="ocr-pos-info">Kein Bereich</p>
+        <div class="ocr-action-row">
+          <button type="button" id="btn-quest-click" class="btn-ocr-action">Mausklick-Position setzen</button>
+          <span class="btn-help-icon" data-help="help_area_02.png">?</span>
+        </div>
+        <p id="quest-click-info" class="ocr-pos-info">Nicht gesetzt</p>
+        <div class="ocr-field-row ocr-field-row-2">
+          <label class="ocr-field-label">Leertasten (Anzahl)
+            <input type="number" id="quest-space-count" class="ocr-field-input" min="0" max="99" value="10" />
+          </label>
+          <label class="ocr-field-label">Intervall (ms)
+            <input type="number" id="quest-space-interval" class="ocr-field-input" min="10" step="10" value="100" />
+          </label>
+        </div>
+        <div class="ocr-quest-subsection">
+          <div class="ocr-toggle-container">
+            <span class="ocr-toggle-label">Quest Window</span>
+            <label class="toggle-switch">
+              <input type="checkbox" id="quest-window-enabled" />
+              <span class="toggle-slider"><span class="on-text">ON</span><span class="off-text">OFF</span></span>
+            </label>
+          </div>
+          <div class="ocr-action-row">
+            <button type="button" id="btn-quest-window-region" class="btn-ocr-action">Bereich wählen</button>
+            <span class="btn-help-icon" data-help="help_area_03.png">?</span>
+          </div>
+          <p id="quest-window-region-info" class="ocr-pos-info">Kein Bereich</p>
+          <div class="ocr-field-row ocr-field-row-2">
+            <label class="ocr-field-label">Prüf-Intervall (ms)
+              <input type="number" id="quest-window-interval" class="ocr-field-input" min="200" max="30000" step="100" value="1000" />
+            </label>
+            <label class="ocr-field-label">Cooldown (ms)
+              <input type="number" id="quest-window-cooldown" class="ocr-field-input" min="500" step="100" value="1500" />
+            </label>
+          </div>
+          <label class="ocr-field-label">Taste wenn Quest fehlt
+            <input type="text" id="quest-window-key" class="ocr-field-input ocr-key-input" maxlength="20" value="l" autocomplete="off" spellcheck="false" style="text-transform: uppercase;" />
+          </label>
+        </div>
+      </div>
+      <div class="ocr-settings-footer">
+        <button type="button" id="ocr-settings-close" class="btn-ocr-close">Schließen</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="ocr-cond-modal" class="modal hidden">
+    <div class="modal-box modal-wide">
+      <h3 id="ocr-cond-title">Bedingung</h3>
+      <label>Stat
+        <select id="ocr-cond-stat">
+          <option value="hp">Leben (LP)</option>
+          <option value="mp">Mana (MP)</option>
+        </select>
+      </label>
+      <label>Vergleich
+        <select id="ocr-cond-mode">
+          <option value="percent">Prozent</option>
+          <option value="value">Absoluter Wert</option>
+        </select>
+      </label>
+      <label>Operator
+        <select id="ocr-cond-op">
+          <option value="<=">≤</option>
+          <option value="<">&lt;</option>
+          <option value=">=">≥</option>
+          <option value=">">&gt;</option>
+        </select>
+      </label>
+      <label>Schwellwert <input type="number" id="ocr-cond-threshold" min="0" step="0.1" value="50" /></label>
+      <label>Taste <input type="text" id="ocr-cond-key" placeholder="z.B. 1" maxlength="20" /></label>
+      <div class="modal-actions">
+        <button type="button" id="ocr-cond-delete" class="btn danger">Löschen</button>
+        <button type="button" id="ocr-cond-cancel" class="btn">Abbrechen</button>
+        <button type="button" id="ocr-cond-save" class="btn btn-accent">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="nav-modal" class="modal hidden">
+    <div class="modal-box">
+      <h3 id="nav-modal-title">Info</h3>
+      <div id="nav-modal-body" class="nav-modal-body"></div>
+      <div class="modal-actions">
+        <button type="button" id="nav-modal-close" class="btn">Schließen</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="help-modal" class="modal hidden">
+    <div class="modal-box help-modal-box">
+      <h3 id="help-modal-title">Hilfe</h3>
+      <div class="help-image-container">
+        <img id="help-modal-img" src="" alt="Hilfe Bild" />
+      </div>
+      <div class="modal-actions">
+        <button type="button" id="help-modal-close" class="btn btn-accent">Schließen</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="frameless-drag.js"></script>
+  <script src="app.js"></script>
+  <script src="ocr-ui.js"></script>
+  <script src="compact-ui.js"></script>
+  <script src="auth.js"></script>
+</body>
+</html>

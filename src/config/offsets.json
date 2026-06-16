@@ -1,0 +1,16 @@
+{
+    "PROCESS_NAME": "Fiesta.exe",
+    "ZOOM_SUFFIX": 26856,
+    "PLAYER_BASE_SUFFIX": 39826,
+    "SCAN_STEP": 65536,
+    "OFFSETS": {
+        "CURRENT_HP": 7058,
+        "MAX_HP": 7290,
+        "CURRENT_MP": 7062,
+        "MAX_MP": 7294,
+        "HP_STONE": 7054,
+        "MP_STONE": 7056,
+        "CHAR_NAME": 7020,
+        "STATUS_OFFSET": 53080
+    }
+}
